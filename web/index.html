@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Confido — ship confidence for Jira releases</title>
+    <meta name="description" content="Confido scores a Jira release from evidence in the tickets, then lets AI explain it. The verdict is deterministic; the prose is optional." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230c1116'/%3E%3Cpath d='M16 5l9 4v7c0 5.2-3.6 9.4-9 11-5.4-1.6-9-5.8-9-11V9l9-4z' fill='none' stroke='%233ddc97' stroke-width='2'/%3E%3Cpath d='M12 16l3 3 5-6' fill='none' stroke='%233ddc97' stroke-width='2'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="topbar">
+      <div class="brand">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+          <path d="M16 4l10 4.4v7.2C26 21.4 21.9 26 16 28 10.1 26 6 21.4 6 15.6V8.4L16 4z" fill="none" stroke="currentColor" stroke-width="1.8" />
+          <path d="M11.5 15.8l3.2 3.2 5.8-6.8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <div>
+          <h1>Confido</h1>
+          <p class="tagline">Ship confidence for Jira releases</p>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="segmented" role="group" aria-label="Sample release">
+          <button type="button" data-preset="payments" class="is-active">Payments 3.4.0</button>
+          <button type="button" data-preset="checkout">Checkout 2.9.0</button>
+        </div>
+        <label class="check">
+          <input type="checkbox" id="drift-toggle" checked />
+          <span>Compare with last week</span>
+        </label>
+        <label class="file">
+          <input type="file" id="csv-input" accept=".csv,text/csv" />
+          <span>Load Jira CSV</span>
+        </label>
+        <button type="button" id="refresh" class="btn btn-primary">Re-assess</button>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="intro">
+        <p>
+          Confido reads a release's Jira context — blockers, owners, ageing, comments, dependencies — and computes a
+          reproducible verdict. <strong>The score and the gate are arithmetic, not a guess.</strong> A model can write the
+          explanation; it cannot move the number.
+        </p>
+        <div class="ai-row">
+          <span id="ai-badge" class="pill pill-muted">AI: checking…</span>
+          <span id="source-badge" class="pill pill-muted">source: —</span>
+        </div>
+      </section>
+
+      <section id="overview" class="grid-overview" aria-live="polite">
+        <article class="card verdict">
+          <header class="card-head">
+            <h2>Release verdict</h2>
+            <span class="muted" id="release-name">—</span>
+          </header>
+          <div class="verdict-body">
+            <div class="ring-wrap">
+              <svg class="ring" viewBox="0 0 120 120" role="img" aria-labelledby="ring-label">
+                <circle class="ring-track" cx="60" cy="60" r="52" />
+                <circle id="ring-value" class="ring-value" cx="60" cy="60" r="52" />
+              </svg>
+              <div class="ring-center">
+                <span id="score" class="score">—</span>
+                <span class="score-unit">/100</span>
+              </div>
+              <span id="ring-label" class="sr-only">Readiness score</span>
+            </div>
+            <div class="verdict-text">
+              <span id="band" class="band band-unknown">—</span>
+              <p id="blurb" class="blurb">—</p>
+              <div class="chips" id="counts"></div>
+              <p class="confidence" id="confidence"></p>
+            </div>
+          </div>
+          <div id="drivers" class="drivers" aria-label="Largest score deductions"></div>
+          <footer class="card-foot">
+            <span class="dot dot-ok"></span>
+            <span id="engine-note">Deterministic engine · verdict cannot be written by a model</span>
+          </footer>        </article>
+
+        <article class="card narrative">
+          <header class="card-head">
+            <h2>Brief</h2>
+            <span id="narrative-badge" class="pill pill-muted">—</span>
+          </header>
+          <div id="narrative" class="prose">—</div>
+        </article>
+      </section>
+
+      <nav class="tabs" role="tablist" aria-label="Report sections">
+        <button role="tab" aria-selected="true" data-tab="risks">Risks <span class="tab-count" id="risk-count">0</span></button>
+        <button role="tab" aria-selected="false" data-tab="plan">Conditions &amp; actions</button>
+        <button role="tab" aria-selected="false" data-tab="notes">Release notes</button>
+        <button role="tab" aria-selected="false" data-tab="drift">Drift</button>
+        <button role="tab" aria-selected="false" data-tab="why">Why this score</button>
+      </nav>
+
+      <section id="panel-risks" class="panel" role="tabpanel">
+        <div class="panel-head">
+          <h2>Risk register</h2>
+          <p class="muted">Every row is a rule that fired, with the tickets that fired it.</p>
+        </div>
+        <div id="risks" class="stack"></div>
+        <div id="overlaps" class="overlaps"></div>
+      </section>
+
+      <section id="panel-plan" class="panel" role="tabpanel" hidden>
+        <div class="two-col">
+          <article class="card">
+            <header class="card-head"><h2>Conditions to ship</h2></header>
+            <ul id="conditions" class="checklist"></ul>
+          </article>
+          <article class="card">
+            <header class="card-head"><h2>This week</h2></header>
+            <ol id="actions" class="actions"></ol>
+          </article>
+        </div>
+      </section>
+
+      <section id="panel-notes" class="panel" role="tabpanel" hidden>
+        <div class="panel-head">
+          <h2>Release notes draft</h2>
+          <p class="muted">Only completed work is listed. Open items are named separately, never claimed as shipped.</p>
+        </div>
+        <div id="notes" class="notes"></div>
+      </section>
+
+      <section id="panel-drift" class="panel" role="tabpanel" hidden>
+        <div class="panel-head">
+          <h2>Drift since the last snapshot</h2>
+          <p class="muted">What changed between two assessments of the same release.</p>
+        </div>
+        <div id="drift" class="drift"></div>
+      </section>
+
+      <section id="panel-why" class="panel" role="tabpanel" hidden>
+        <div class="panel-head">
+          <h2>How this score was produced</h2>
+          <p class="muted">100 minus capped penalties. Nothing here is inferred by a model.</p>
+        </div>
+        <div class="card">
+          <div id="why" class="why"></div>
+        </div>
+      </section>
+
+      <p id="error" class="error" hidden></p>
+    </main>
+
+    <footer class="footer">
+      <div>
+        <span>Confido 0.1.0</span>
+        <span class="sep">·</span>
+        <span>MIT</span>
+        <span class="sep">·</span>
+        <a href="https://github.com/04jennet-coder" rel="noreferrer noopener" target="_blank">@04jennet</a>
+      </div>
+      <div class="footer-actions">
+        <button type="button" id="copy" class="btn">Copy brief</button>
+        <button type="button" id="download" class="btn">Download .md</button>
+      </div>
+    </footer>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

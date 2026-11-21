@@ -1,0 +1,638 @@
+{
+  "release": {
+    "name": "Payments 3.4.0",
+    "projectKey": "PAY",
+    "fixVersion": "3.4.0",
+    "sprintName": "PAY Sprint 42",
+    "startedAt": "2026-11-02T09:00:00+09:00",
+    "asOf": "2026-11-20T18:00:00+09:00"
+  },
+  "items": [
+    {
+      "key": "PAY-1381",
+      "summary": "3DS2 challenge fails on Samsung Internet",
+      "type": "Bug",
+      "status": "Done",
+      "statusCategory": "done",
+      "priority": "High",
+      "assignee": "Hyerin Cho",
+      "components": [
+        "checkout"
+      ],
+      "labels": [],
+      "created": "2026-10-22T10:12:00+09:00",
+      "updated": "2026-11-06T16:40:00+09:00",
+      "dueDate": null,
+      "resolved": "2026-11-06T16:40:00+09:00",
+      "storyPoints": 3,
+      "fixVersions": [
+        "3.4.0"
+      ],
+      "links": [],
+      "description": "Challenge iframe loses postMessage after the Samsung Internet 22 update. Fixed by pinning the challenge window to the top frame.",
+      "comments": []
+    },
+    {
+      "key": "PAY-1384",
+      "summary": "Idempotency key support for refunds",
+      "type": "Story",
+      "status": "Done",
+      "statusCategory": "done",
+      "priority": "High",
+      "assignee": "Donghyun Kim",
+      "components": [
+        "refunds"
+      ],
+      "labels": [],
+      "created": "2026-10-27T09:00:00+09:00",
+      "updated": "2026-11-11T18:02:00+09:00",
+      "dueDate": null,
+      "resolved": "2026-11-11T18:02:00+09:00",
+      "storyPoints": 8,
+      "fixVersions": [
+        "3.4.0"
+      ],
+      "links": [],
+      "description": "Merchants can now retry a refund safely with an Idempotency-Key header. Duplicate requests return the original refund object.",
+      "comments": []
+    },
+    {
+      "key": "PAY-1387",
+      "summary": "Rotate PSP webhook signing secret without downtime",
+      "type": "Task",
+      "status": "Done",
+      "statusCategory": "done",
+      "priority": "Medium",
+      "assignee": "Mina Seo",
+      "components": [
+        "platform"
+      ],
+      "labels": [],
+      "created": "2026-10-28T11:00:00+09:00",
+      "updated": "2026-11-09T12:15:00+09:00",
+      "dueDate": null,
+      "resolved": "2026-11-09T12:15:00+09:00",
+      "storyPoints": 3,
+      "fixVersions": [
+        "3.4.0"
+      ],
+      "links": [],
+      "description": "Dual-secret window so merchants can rotate signing secrets with zero dropped webhooks.",
+      "comments": []
+    },
+    {
+      "key": "PAY-1392",
+      "summary": "Expose settlement batch status endpoint",
+      "type": "Story",
+      "status": "Done",
+      "statusCategory": "done",
+      "priority": "Medium",
+      "assignee": "Soojin Lee",
+      "components": [
+        "settlement"
+      ],
+      "labels": [],
+      "created": "2026-10-29T14:20:00+09:00",
+      "updated": "2026-11-12T10:30:00+09:00",
+      "dueDate": null,
+      "resolved": "2026-11-12T10:30:00+09:00",
+      "storyPoints": 5,
+      "fixVersions": [
+        "3.4.0"
+      ],
+      "links": [],
+      "description": "GET /settlement/batches/{id} returns batch state, totals and per-currency breakdown.",
+      "comments": []
+    },
+    {
+      "key": "PAY-1395",
+      "summary": "Rounding drift in multi-currency refunds",
+      "type": "Bug",
+      "status": "Done",
+      "statusCategory": "done",
+      "priority": "Highest",
+      "assignee": "Hyerin Cho",
+      "components": [
+        "refunds"
+      ],
+      "labels": [],
+      "created": "2026-11-02T09:30:00+09:00",
+      "updated": "2026-11-13T19:45:00+09:00",
+      "dueDate": null,
+      "resolved": "2026-11-13T19:45:00+09:00",
+      "storyPoints": 5,
+      "fixVersions": [
+        "3.4.0"
+      ],
+      "links": [],
+      "description": "Refunds were rounding half-up on the intermediate currency conversion, leaving 1-cent residuals in settlement reports.",
+      "comments": []
+    },
+    {
+      "key": "PAY-1398",
+      "summary": "Datadog dashboard for auth failure rate",
+      "type": "Task",
+      "status": "Done",
+      "statusCategory": "done",
+      "priority": "Low",
+      "assignee": "Soojin Lee",
+      "components": [
+        "platform"
+      ],
+      "labels": [],
+      "created": "2026-11-03T10:00:00+09:00",
+      "updated": "2026-11-10T15:20:00+09:00",
+      "dueDate": null,
+      "resolved": "2026-11-10T15:20:00+09:00",
+      "storyPoints": 2,
+      "fixVersions": [
+        "3.4.0"
+      ],
+      "links": [],
+      "description": "One dashboard with auth failure rate by issuer and decline reason, wired to the on-call alert.",
+      "comments": []
+    },
+    {
+      "key": "PAY-1400",
+      "summary": "Saved-card SCA exemption flag",
+      "type": "Story",
+      "status": "Done",
+      "statusCategory": "done",
+      "priority": "High",
+      "assignee": "Donghyun Kim",
+      "components": [
+        "checkout"
+      ],
+      "labels": [],
+      "created": "2026-11-03T11:15:00+09:00",
+      "updated": "2026-11-17T17:00:00+09:00",
+      "dueDate": null,
+      "resolved": "2026-11-17T17:00:00+09:00",
+      "storyPoints": 8,
+      "fixVersions": [
+        "3.4.0"
+      ],
+      "links": [],
+      "description": "Merchants can request an exemption for low-risk saved-card transactions; fallback to challenge when the issuer declines the exemption.",
+      "comments": []
+    },
+    {
+      "key": "PAY-1403",
+      "summary": "Retry storm after gateway 502",
+      "type": "Bug",
+      "status": "Done",
+      "statusCategory": "done",
+      "priority": "High",
+      "assignee": "Mina Seo",
+      "components": [
+        "platform"
+      ],
+      "labels": [],
+      "created": "2026-11-04T08:40:00+09:00",
+      "updated": "2026-11-14T11:10:00+09:00",
+      "dueDate": null,
+      "resolved": "2026-11-14T11:10:00+09:00",
+      "storyPoints": 3,
+      "fixVersions": [
+        "3.4.0"
+      ],
+      "links": [],
+      "description": "Unbounded retries multiplied traffic 40x after a gateway blip. Added exponential backoff with a 3 attempt ceiling and jitter.",
+      "comments": []
+    },
+    {
+      "key": "PAY-1406",
+      "summary": "Merchant-level fee override",
+      "type": "Story",
+      "status": "Done",
+      "statusCategory": "done",
+      "priority": "Medium",
+      "assignee": "Donghyun Kim",
+      "components": [
+        "billing"
+      ],
+      "labels": [],
+      "created": "2026-11-04T13:00:00+09:00",
+      "updated": "2026-11-18T16:25:00+09:00",
+      "dueDate": null,
+      "resolved": "2026-11-18T16:25:00+09:00",
+      "storyPoints": 5,
+      "fixVersions": [
+        "3.4.0"
+      ],
+      "links": [],
+      "description": "Finance can override the fee schedule for a single merchant without cloning the whole plan.",
+      "comments": []
+    },
+    {
+      "key": "PAY-1408",
+      "summary": "Upgrade Stripe SDK to v18",
+      "type": "Chore",
+      "status": "Done",
+      "statusCategory": "done",
+      "priority": "Medium",
+      "assignee": "Mina Seo",
+      "components": [
+        "platform"
+      ],
+      "labels": [
+        "breaking"
+      ],
+      "created": "2026-11-05T09:10:00+09:00",
+      "updated": "2026-11-16T14:00:00+09:00",
+      "dueDate": null,
+      "resolved": "2026-11-16T14:00:00+09:00",
+      "storyPoints": 3,
+      "fixVersions": [
+        "3.4.0"
+      ],
+      "links": [],
+      "description": "v18 removes the legacy Charges API surface. All call sites moved to PaymentIntents; the merchant-facing v1 charge endpoint is deprecated and must be removed next release.",
+      "comments": []
+    },
+    {
+      "key": "PAY-1409",
+      "summary": "Backfill merchant fee tiers",
+      "type": "Task",
+      "status": "Done",
+      "statusCategory": "done",
+      "priority": "Low",
+      "assignee": "Soojin Lee",
+      "components": [
+        "billing"
+      ],
+      "labels": [],
+      "created": "2026-11-05T10:30:00+09:00",
+      "updated": "2026-11-12T09:00:00+09:00",
+      "dueDate": null,
+      "resolved": "2026-11-12T09:00:00+09:00",
+      "storyPoints": 2,
+      "fixVersions": [
+        "3.4.0"
+      ],
+      "links": [],
+      "description": "One-off job that filled the new tier column for existing merchants. 12,418 rows, verified against the finance export.",
+      "comments": []
+    },
+    {
+      "key": "PAY-1411",
+      "summary": "Duplicate currency symbol in receipt email",
+      "type": "Bug",
+      "status": "Done",
+      "statusCategory": "done",
+      "priority": "Low",
+      "assignee": "Hyerin Cho",
+      "components": [
+        "notifications"
+      ],
+      "labels": [],
+      "created": "2026-11-06T15:00:00+09:00",
+      "updated": "2026-11-13T10:05:00+09:00",
+      "dueDate": null,
+      "resolved": "2026-11-13T10:05:00+09:00",
+      "storyPoints": 1,
+      "fixVersions": [
+        "3.4.0"
+      ],
+      "links": [],
+      "description": "JPY receipts rendered ¥ twice because the locale formatter already includes the symbol.",
+      "comments": []
+    },
+    {
+      "key": "PAY-1424",
+      "summary": "Duplicate refund webhook on retry",
+      "type": "Bug",
+      "status": "Done",
+      "statusCategory": "done",
+      "priority": "High",
+      "assignee": "Hyerin Cho",
+      "components": [
+        "refunds"
+      ],
+      "labels": [],
+      "created": "2026-11-06T16:20:00+09:00",
+      "updated": "2026-11-19T13:45:00+09:00",
+      "dueDate": null,
+      "resolved": "2026-11-19T13:45:00+09:00",
+      "storyPoints": 2,
+      "fixVersions": [
+        "3.4.0"
+      ],
+      "links": [],
+      "description": "A retried refund emitted refund.created twice when the first attempt timed out after committing. Deduplicated by idempotency key.",
+      "comments": []
+    },
+    {
+      "key": "PAY-1390",
+      "summary": "Network token vault schema and backfill",
+      "type": "Story",
+      "status": "In Progress",
+      "statusCategory": "in_progress",
+      "priority": "High",
+      "assignee": "Mina Seo",
+      "components": [
+        "platform"
+      ],
+      "labels": [],
+      "created": "2026-11-03T09:45:00+09:00",
+      "updated": "2026-11-19T11:30:00+09:00",
+      "dueDate": null,
+      "resolved": null,
+      "storyPoints": 8,
+      "fixVersions": [
+        "3.4.0"
+      ],
+      "links": [
+        {
+          "type": "is blocked by",
+          "key": "INFRA-2211"
+        }
+      ],
+      "description": "New token vault table plus a backfill job for existing card-on-file records. Backfill is written; the schema review is owned outside this team.",
+      "comments": [
+        {
+          "author": "Mina Seo",
+          "created": "2026-11-19T11:30:00+09:00",
+          "body": "Backfill job is ready and dry-run clean. Still waiting on the infra review of the schema change before we can create the table in production."
+        }
+      ]
+    },
+    {
+      "key": "PAY-1401",
+      "summary": "Card-on-file network token migration",
+      "type": "Story",
+      "status": "In Progress",
+      "statusCategory": "in_progress",
+      "priority": "Highest",
+      "assignee": null,
+      "components": [
+        "checkout"
+      ],
+      "labels": [],
+      "created": "2026-11-10T10:00:00+09:00",
+      "updated": "2026-11-19T16:10:00+09:00",
+      "dueDate": null,
+      "resolved": null,
+      "storyPoints": 13,
+      "fixVersions": [
+        "3.4.0"
+      ],
+      "links": [
+        {
+          "type": "is blocked by",
+          "key": "PAY-1390"
+        }
+      ],
+      "description": "Migrate stored cards to network tokens so issuers stop declining reused PANs on recurring charges.",
+      "comments": [
+        {
+          "author": "Jiwon Park",
+          "created": "2026-11-19T16:10:00+09:00",
+          "body": "Network token sandbox has been down since Tuesday. We are waiting on the provider's support ticket 4471 before we can validate the migration path end to end."
+        }
+      ]
+    },
+    {
+      "key": "PAY-1393",
+      "summary": "Double capture when 3DS challenge is abandoned",
+      "type": "Bug",
+      "status": "In Progress",
+      "statusCategory": "in_progress",
+      "priority": "Highest",
+      "assignee": "Hyerin Cho",
+      "components": [
+        "checkout"
+      ],
+      "labels": [],
+      "created": "2026-11-02T13:20:00+09:00",
+      "updated": "2026-11-12T17:40:00+09:00",
+      "dueDate": "2026-11-14T18:00:00+09:00",
+      "resolved": null,
+      "storyPoints": 5,
+      "fixVersions": [
+        "3.4.0"
+      ],
+      "links": [],
+      "description": "If the shopper closes the challenge window, the authorisation is captured twice when the merchant retries within 30 seconds.",
+      "comments": [
+        {
+          "author": "Hyerin Cho",
+          "created": "2026-11-12T17:40:00+09:00",
+          "body": "Still failing intermittently in staging, only when the challenge is abandoned after the issuer redirect. Cannot reproduce in unit tests."
+        }
+      ]
+    },
+    {
+      "key": "PAY-1404",
+      "summary": "Partial refund support in merchant dashboard",
+      "type": "Story",
+      "status": "To Do",
+      "statusCategory": "todo",
+      "priority": "High",
+      "assignee": "Donghyun Kim",
+      "components": [
+        "refunds"
+      ],
+      "labels": [],
+      "created": "2026-11-19T09:20:00+09:00",
+      "updated": "2026-11-20T09:00:00+09:00",
+      "dueDate": null,
+      "resolved": null,
+      "storyPoints": 5,
+      "fixVersions": [
+        "3.4.0"
+      ],
+      "links": [],
+      "description": "Let support agents refund a subset of line items instead of the whole order. Requires a new dashboard flow and a refund-preview endpoint.",
+      "comments": []
+    },
+    {
+      "key": "PAY-1410",
+      "summary": "Rate limit headers on public API",
+      "type": "Task",
+      "status": "In Progress",
+      "statusCategory": "in_progress",
+      "priority": "Medium",
+      "assignee": "Soojin Lee",
+      "components": [
+        "platform"
+      ],
+      "labels": [],
+      "created": "2026-11-05T14:00:00+09:00",
+      "updated": "2026-11-17T15:10:00+09:00",
+      "dueDate": null,
+      "resolved": null,
+      "storyPoints": 3,
+      "fixVersions": [
+        "3.4.0"
+      ],
+      "links": [],
+      "description": "Return X-RateLimit-Limit, Remaining and Reset on every public endpoint response, including 429s.",
+      "comments": []
+    },
+    {
+      "key": "PAY-1414",
+      "summary": "JPY settlement rounding mismatch",
+      "type": "Bug",
+      "status": "In Review",
+      "statusCategory": "in_progress",
+      "priority": "Highest",
+      "assignee": "Hyerin Cho",
+      "components": [
+        "settlement"
+      ],
+      "labels": [],
+      "created": "2026-11-06T10:15:00+09:00",
+      "updated": "2026-11-18T10:05:00+09:00",
+      "dueDate": null,
+      "resolved": null,
+      "storyPoints": 3,
+      "fixVersions": [
+        "3.4.0"
+      ],
+      "links": [],
+      "description": "Settlement totals for zero-decimal currencies differ from the PSP report by up to 2 JPY per batch because the divisor assumes two decimals.",
+      "comments": [
+        {
+          "author": "Hyerin Cho",
+          "created": "2026-11-18T10:05:00+09:00",
+          "body": "Still broken for zero-decimal currencies (JPY, KRW). This may slip the cut unless we scope the fix to a hotfix right after release."
+        }
+      ]
+    },
+    {
+      "key": "PAY-1418",
+      "summary": "Merchant onboarding checklist UI",
+      "type": "Story",
+      "status": "To Do",
+      "statusCategory": "todo",
+      "priority": "High",
+      "assignee": "Soojin Lee",
+      "components": [
+        "onboarding"
+      ],
+      "labels": [],
+      "created": "2026-11-09T11:00:00+09:00",
+      "updated": "2026-11-15T12:00:00+09:00",
+      "dueDate": null,
+      "resolved": null,
+      "storyPoints": null,
+      "fixVersions": [
+        "3.4.0"
+      ],
+      "links": [],
+      "description": "Add checklist.",
+      "comments": []
+    },
+    {
+      "key": "PAY-1420",
+      "summary": "Tokenized card display in wallet",
+      "type": "Task",
+      "status": "In Progress",
+      "statusCategory": "in_progress",
+      "priority": "Medium",
+      "assignee": "Mina Seo",
+      "components": [
+        "checkout"
+      ],
+      "labels": [],
+      "created": "2026-11-10T10:30:00+09:00",
+      "updated": "2026-11-16T18:20:00+09:00",
+      "dueDate": null,
+      "resolved": null,
+      "storyPoints": 3,
+      "fixVersions": [
+        "3.4.0"
+      ],
+      "links": [],
+      "description": "Show the network token last-4 and scheme badge on saved cards so support can tell which cards are already tokenized.",
+      "comments": []
+    },
+    {
+      "key": "PAY-1426",
+      "summary": "Merchant fee override audit log",
+      "type": "Story",
+      "status": "In Progress",
+      "statusCategory": "in_progress",
+      "priority": "High",
+      "assignee": "Donghyun Kim",
+      "components": [
+        "billing"
+      ],
+      "labels": [],
+      "created": "2026-11-11T09:00:00+09:00",
+      "updated": "2026-11-19T09:40:00+09:00",
+      "dueDate": null,
+      "resolved": null,
+      "storyPoints": 5,
+      "fixVersions": [
+        "3.4.0"
+      ],
+      "links": [],
+      "description": "Every fee override must leave an immutable audit entry with actor, before and after values, and a reason code.",
+      "comments": [
+        {
+          "author": "Donghyun Kim",
+          "created": "2026-11-19T09:40:00+09:00",
+          "body": "Legal review blocked the audit schema change. We cannot merge until they sign off on the retention policy, and they are out until Monday."
+        }
+      ]
+    },
+    {
+      "key": "PAY-1428",
+      "summary": "Load test checkout at 3x peak",
+      "type": "Task",
+      "status": "In Progress",
+      "statusCategory": "in_progress",
+      "priority": "High",
+      "assignee": "Soojin Lee",
+      "components": [
+        "platform"
+      ],
+      "labels": [],
+      "created": "2026-11-12T13:00:00+09:00",
+      "updated": "2026-11-20T10:15:00+09:00",
+      "dueDate": "2026-11-18T18:00:00+09:00",
+      "resolved": null,
+      "storyPoints": 3,
+      "fixVersions": [
+        "3.4.0"
+      ],
+      "links": [],
+      "description": "Run the 3x peak scenario against the pre-release build and record p99 latency and error budget burn.",
+      "comments": [
+        {
+          "author": "Soojin Lee",
+          "created": "2026-11-17T17:10:00+09:00",
+          "body": "Test environment was unavailable for two days, so the load test is delayed by the infra ticket INFRA-2209. Rescheduled to Thursday."
+        }
+      ]
+    },
+    {
+      "key": "PAY-1430",
+      "summary": "Remove deprecated v1 charge endpoint",
+      "type": "Chore",
+      "status": "To Do",
+      "statusCategory": "todo",
+      "priority": "Medium",
+      "assignee": null,
+      "components": [
+        "platform"
+      ],
+      "labels": [
+        "breaking"
+      ],
+      "created": "2026-11-03T16:00:00+09:00",
+      "updated": "2026-11-14T09:30:00+09:00",
+      "dueDate": null,
+      "resolved": null,
+      "storyPoints": 2,
+      "fixVersions": [
+        "3.4.0"
+      ],
+      "links": [],
+      "description": "v1 /charges is deprecated since the Stripe SDK upgrade. Announce the removal window and delete the route, metrics and docs.",
+      "comments": []
+    }
+  ]
+}

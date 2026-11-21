@@ -1,0 +1,230 @@
+{
+  "release": {
+    "name": "Checkout 2.9.0",
+    "projectKey": "CHK",
+    "fixVersion": "2.9.0",
+    "sprintName": "CHK Sprint 18",
+    "startedAt": "2026-10-22T09:00:00+09:00",
+    "asOf": "2026-11-20T18:00:00+09:00"
+  },
+  "items": [
+    {
+      "key": "CHK-2101",
+      "summary": "Express checkout for returning shoppers",
+      "type": "Story",
+      "status": "Done",
+      "statusCategory": "done",
+      "priority": "High",
+      "assignee": "Jiwon Park",
+      "components": [
+        "checkout"
+      ],
+      "labels": [],
+      "created": "2026-10-12T09:00:00+09:00",
+      "updated": "2026-10-27T17:00:00+09:00",
+      "dueDate": null,
+      "resolved": "2026-10-27T17:00:00+09:00",
+      "storyPoints": 8,
+      "fixVersions": [
+        "2.9.0"
+      ],
+      "links": [],
+      "description": "Returning shoppers with a saved card skip address entry and confirm in one tap.",
+      "comments": []
+    },
+    {
+      "key": "CHK-2102",
+      "summary": "Fix lost focus ring on card form",
+      "type": "Bug",
+      "status": "Done",
+      "statusCategory": "done",
+      "priority": "Medium",
+      "assignee": "Hyerin Cho",
+      "components": [
+        "checkout"
+      ],
+      "labels": [],
+      "created": "2026-10-14T10:00:00+09:00",
+      "updated": "2026-10-24T12:00:00+09:00",
+      "dueDate": null,
+      "resolved": "2026-10-24T12:00:00+09:00",
+      "storyPoints": 2,
+      "fixVersions": [
+        "2.9.0"
+      ],
+      "links": [],
+      "description": "The focus ring disappeared after selecting a saved card with the keyboard.",
+      "comments": []
+    },
+    {
+      "key": "CHK-2103",
+      "summary": "Address autocomplete for KR and JP",
+      "type": "Story",
+      "status": "Done",
+      "statusCategory": "done",
+      "priority": "High",
+      "assignee": "Jiwon Park",
+      "components": [
+        "checkout"
+      ],
+      "labels": [],
+      "created": "2026-10-15T09:30:00+09:00",
+      "updated": "2026-10-30T15:20:00+09:00",
+      "dueDate": null,
+      "resolved": "2026-10-30T15:20:00+09:00",
+      "storyPoints": 8,
+      "fixVersions": [
+        "2.9.0"
+      ],
+      "links": [],
+      "description": "Postal-code driven autocomplete with the local address database, cached for 24 hours.",
+      "comments": []
+    },
+    {
+      "key": "CHK-2104",
+      "summary": "Order summary tax preview",
+      "type": "Story",
+      "status": "Done",
+      "statusCategory": "done",
+      "priority": "Medium",
+      "assignee": "Donghyun Kim",
+      "components": [
+        "checkout"
+      ],
+      "labels": [],
+      "created": "2026-10-16T11:00:00+09:00",
+      "updated": "2026-10-28T14:00:00+09:00",
+      "dueDate": null,
+      "resolved": "2026-10-28T14:00:00+09:00",
+      "storyPoints": 5,
+      "fixVersions": [
+        "2.9.0"
+      ],
+      "links": [],
+      "description": "Show estimated tax before the payment step, recalculated when the address changes.",
+      "comments": []
+    },
+    {
+      "key": "CHK-2105",
+      "summary": "Retry payment intent on network timeout",
+      "type": "Task",
+      "status": "Done",
+      "statusCategory": "done",
+      "priority": "High",
+      "assignee": "Soojin Lee",
+      "components": [
+        "platform"
+      ],
+      "labels": [],
+      "created": "2026-10-19T09:00:00+09:00",
+      "updated": "2026-10-31T16:40:00+09:00",
+      "dueDate": null,
+      "resolved": "2026-10-31T16:40:00+09:00",
+      "storyPoints": 3,
+      "fixVersions": [
+        "2.9.0"
+      ],
+      "links": [],
+      "description": "One silent retry with the same idempotency key when the client loses the connection after submit.",
+      "comments": []
+    },
+    {
+      "key": "CHK-2106",
+      "summary": "Remove legacy checkout v0 route",
+      "type": "Chore",
+      "status": "Done",
+      "statusCategory": "done",
+      "priority": "Low",
+      "assignee": "Mina Seo",
+      "components": [
+        "platform"
+      ],
+      "labels": [
+        "breaking"
+      ],
+      "created": "2026-10-20T10:00:00+09:00",
+      "updated": "2026-10-29T09:20:00+09:00",
+      "dueDate": null,
+      "resolved": "2026-10-29T09:20:00+09:00",
+      "storyPoints": 2,
+      "fixVersions": [
+        "2.9.0"
+      ],
+      "links": [],
+      "description": "All traffic moved to v2 in September; the v0 route and its feature flag are deleted.",
+      "comments": []
+    },
+    {
+      "key": "CHK-2107",
+      "summary": "Fix currency formatting for zero-decimal markets",
+      "type": "Bug",
+      "status": "Done",
+      "statusCategory": "done",
+      "priority": "Medium",
+      "assignee": "Hyerin Cho",
+      "components": [
+        "checkout"
+      ],
+      "labels": [],
+      "created": "2026-10-21T13:00:00+09:00",
+      "updated": "2026-11-01T11:10:00+09:00",
+      "dueDate": null,
+      "resolved": "2026-11-01T11:10:00+09:00",
+      "storyPoints": 2,
+      "fixVersions": [
+        "2.9.0"
+      ],
+      "links": [],
+      "description": "JPY and KRW totals rendered with decimal places in the order summary.",
+      "comments": []
+    },
+    {
+      "key": "CHK-2108",
+      "summary": "Checkout telemetry for step drop-off",
+      "type": "Task",
+      "status": "In Progress",
+      "statusCategory": "in_progress",
+      "priority": "Medium",
+      "assignee": "Soojin Lee",
+      "components": [
+        "platform"
+      ],
+      "labels": [],
+      "created": "2026-10-22T09:00:00+09:00",
+      "updated": "2026-11-18T15:30:00+09:00",
+      "dueDate": null,
+      "resolved": null,
+      "storyPoints": 3,
+      "fixVersions": [
+        "2.9.0"
+      ],
+      "links": [],
+      "description": "Emit an event per checkout step with duration and validation errors, sampled at 20%.",
+      "comments": []
+    },
+    {
+      "key": "CHK-2110",
+      "summary": "Gift message field on order confirmation",
+      "type": "Story",
+      "status": "To Do",
+      "statusCategory": "todo",
+      "priority": "Medium",
+      "assignee": "Jiwon Park",
+      "components": [
+        "checkout"
+      ],
+      "labels": [],
+      "created": "2026-10-26T10:00:00+09:00",
+      "updated": "2026-11-19T10:10:00+09:00",
+      "dueDate": null,
+      "resolved": null,
+      "storyPoints": null,
+      "fixVersions": [
+        "2.9.0"
+      ],
+      "links": [],
+      "description": "Optional 120 character gift message stored on the order and shown on the confirmation page and email.",
+      "comments": []
+    }
+  ]
+}

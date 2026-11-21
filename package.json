@@ -1,0 +1,26 @@
+{
+  "name": "confido",
+  "version": "0.1.0",
+  "description": "Confido \u2014 evidence-backed ship confidence briefs for Jira releases. Deterministic risk truth, AI only for explanation.",
+  "type": "module",
+  "license": "MIT",
+  "author": "04jennet",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "build:forge": "tsc -p tsconfig.forge.json",
+    "start": "npm run build && node dist/server.js",
+    "dev": "npm run build && node dist/server.js --port 4173",
+    "cli": "npm run build --silent && node dist/cli.js",
+    "mcp": "npm run build --silent && node dist/mcp/server.js",
+    "test": "npm run build --silent && npm run build:forge --silent && node --test tests/",
+    "test:only": "node --test tests/"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "typescript": "^5.6.0",
+    "yaml": "^2.5.0"
+  }
+}

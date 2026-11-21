@@ -1,0 +1,216 @@
+# Confido — Forge app for Codegeist 2026
+#
+# Modules: a Rovo agent, a reusable Rovo skill, and an MCP server, all backed by
+# the same deterministic engine that runs the standalone web app (../src/core).
+#
+# Before deploying:
+#   1. npm install            (in this folder — installs @forge/api)
+#   2. npm run build:core     (compiles ../src/core → src/lib)
+#   3. forge register         (creates the app id and writes it below)
+#   4. forge deploy && forge install --upgrade
+#
+# The app id is intentionally absent: `forge register` creates it for the account
+# that owns the app, and hard-coding someone else's id would break the install.
+
+app:
+  runtime:
+    name: nodejs24.x
+    memoryMB: 512
+    architecture: arm64
+
+modules:
+  # ------------------------------------------------------------------ agent
+  rovo:agent:
+    - key: confido-release-captain
+      name: Confido Release Captain
+      description: Turns a Jira release into an evidence-backed ship-confidence brief, and answers "are we ready to ship?" with the exact tickets behind the answer.
+      prompt: |
+        You are Confido Release Captain, a release analyst inside Jira.
+
+        Your job: answer "can we ship this release, and what has to be true first?"
+        using the assess-release action as the single source of truth.
+
+        Rules:
+        - Never invent risk, dates, owners or tickets. If the tool did not return it, do not say it.
+        - The score and the verdict come from the tool. Do not re-score, round or reinterpret them.
+        - Always name the issue keys that produced a risk, so a human can open them.
+        - If a call fails because the project key is missing, ask for the project key or a JQL query.
+        - Be direct. A release at risk is described as at risk.
+
+        Workflow:
+        1. assess-release for the project and version the user names.
+        2. Summarise verdict, score, and the two or three risks that drive it, with keys.
+        3. Offer the conditions to ship and the three next actions.
+        4. Only go deeper (list-risks, explain-score, draft-release-notes) when asked or when it changes the answer.
+      conversationStarters:
+        - Are we ready to ship the current release?
+        - What is blocking this release, and who owns it?
+        - Explain why the release scored the way it did.
+        - Draft the release notes for this version.
+      skills:
+        - release-readiness
+      actions:
+        - assess-release
+        - list-risks
+        - explain-score
+        - draft-release-notes
+
+  # ------------------------------------------------------------------ skill
+  rovo:skill:
+    - key: release-readiness
+      source:
+        dir: skills/release-readiness
+      dependencies:
+        tools:
+          - assess-release
+          - list-risks
+          - explain-score
+          - draft-release-notes
+
+  # -------------------------------------------------------------------- MCP
+  # Exposed to Rovo custom agents and, once an admin enables it, to third-party
+  # MCP clients at https://mcp.atlassian.com/forge/<appId>.
+  rovo:mcp:
+    - key: confido-mcp
+      name: Confido release readiness
+      tools:
+        - assess-release
+        - list-risks
+        - explain-score
+        - draft-release-notes
+        - get-brief
+
+  # ---------------------------------------------------------------- actions
+  action:
+    - key: assess-release
+      name: Assess release readiness
+      function: assessRelease
+      actionVerb: GET
+      description: >
+        Score a Jira release from 0 to 100 and return an evidence-backed verdict.
+        Every deduction is traceable to an issue key. Read-only.
+      inputs:
+        projectKey:
+          title: Project key
+          type: string
+          required: false
+          description: Jira project key, for example PAY.
+        fixVersion:
+          title: Fix version
+          type: string
+          required: false
+          description: The fix version that defines the release scope, for example 3.4.0.
+        jql:
+          title: JQL
+          type: string
+          required: false
+          description: Explicit JQL for the release scope. Overrides project key and fix version.
+        asOf:
+          title: Evaluate at
+          type: string
+          required: false
+          description: ISO timestamp to evaluate the release at. Defaults to now.
+    - key: list-risks
+      name: List release risks
+      function: listRisks
+      actionVerb: GET
+      description: >
+        The risk register for a release, with severity, penalty and the tickets behind each risk.
+      inputs:
+        projectKey:
+          title: Project key
+          type: string
+          required: false
+          description: Jira project key.
+        fixVersion:
+          title: Fix version
+          type: string
+          required: false
+          description: Fix version that defines the release.
+        severity:
+          title: Severity
+          type: string
+          required: false
+          description: One of critical, high, medium, low.
+        limit:
+          title: Limit
+          type: number
+          required: false
+          description: Maximum number of risks to return. Defaults to 10.
+    - key: explain-score
+      name: Explain the score
+      function: explainScore
+      actionVerb: GET
+      description: >
+        Show the arithmetic behind a release score, rule by rule, with the issues cited.
+      inputs:
+        projectKey:
+          title: Project key
+          type: string
+          required: false
+          description: Jira project key.
+        fixVersion:
+          title: Fix version
+          type: string
+          required: false
+          description: Fix version that defines the release.
+    - key: draft-release-notes
+      name: Draft release notes
+      function: draftReleaseNotes
+      actionVerb: GET
+      description: >
+        Release notes built only from completed issues, grouped into breaking, new, fixed and improved.
+      inputs:
+        projectKey:
+          title: Project key
+          type: string
+          required: false
+          description: Jira project key.
+        fixVersion:
+          title: Fix version
+          type: string
+          required: false
+          description: Fix version that defines the release.
+    - key: get-brief
+      name: Get ship confidence brief
+      function: getBrief
+      actionVerb: GET
+      description: >
+        The complete markdown brief for a release: verdict, narrative, conditions, risk register and release notes.
+      inputs:
+        projectKey:
+          title: Project key
+          type: string
+          required: false
+          description: Jira project key.
+        fixVersion:
+          title: Fix version
+          type: string
+          required: false
+          description: Fix version that defines the release.
+        jql:
+          title: JQL
+          type: string
+          required: false
+          description: Explicit JQL for the release scope.
+        format:
+          title: Format
+          type: string
+          required: false
+          description: markdown (default) or json.
+
+  function:
+    - key: assessRelease
+      handler: index.assessRelease
+    - key: listRisks
+      handler: index.listRisks
+    - key: explainScore
+      handler: index.explainScore
+    - key: draftReleaseNotes
+      handler: index.draftReleaseNotes
+    - key: getBrief
+      handler: index.getBrief
+
+permissions:
+  scopes:
+    - read:jira-work

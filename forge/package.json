@@ -1,0 +1,14 @@
+{
+  "name": "confido-forge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Confido Forge app: Rovo agent, Rovo skill and MCP tools for release readiness.",
+  "scripts": {
+    "build:core": "tsc -p ../tsconfig.forge.json",
+    "lint": "forge lint"
+  },
+  "dependencies": {
+    "@forge/api": "^6.0.0"
+  }
+}
