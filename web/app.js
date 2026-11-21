@@ -155,6 +155,18 @@ function render(bundle) {
     )
     .join("");
 
+  const criticalFindings = a.signals
+    .filter((s) => s.severity === "critical")
+    .reduce((n, s) => n + Math.round(s.penalty / s.weight), 0);
+  const gateNote = criticalFindings >= 2
+    ? `<strong>Gate applied:</strong> ${criticalFindings} unresolved blockers. The verdict is capped at ${esc(a.bandLabel)} no matter how many points the rest of the release earns.`
+    : criticalFindings === 1
+      ? `<strong>Gate applied:</strong> one unresolved blocker. The best possible verdict is SHIP WITH CONDITIONS.`
+      : a.conditions.length
+        ? `<strong>Before you ship:</strong> ${esc(a.conditions[0])}`
+        : `<strong>No gate applied:</strong> nothing in the data holds this release back.`;
+  $("gate").innerHTML = gateNote;
+
   $("ai-badge").textContent = bundle.ai.enabled ? `AI narration: ${bundle.ai.provider}` : "AI narration: off (deterministic)";
   $("ai-badge").className = `pill ${bundle.ai.enabled ? "pill-on" : "pill-muted"}`;
   $("source-badge").textContent = `source: ${a.source}`;

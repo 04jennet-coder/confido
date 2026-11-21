@@ -58,7 +58,6 @@ function factsForModel(assessment: Assessment, scope: ReleaseScope): string {
 /** The no-model brief. This is what ships in the demo and in the tests. */
 export function deterministicNarrative(assessment: Assessment, scope: ReleaseScope): string {
   const { counts, score, bandLabel } = assessment;
-  const open = assessment.signals.reduce((sum, s) => sum + s.findings.length, 0);
 
   const lines: string[] = [];
   lines.push("## What is true now");
@@ -96,17 +95,32 @@ export function deterministicNarrative(assessment: Assessment, scope: ReleaseSco
 
   lines.push("");
   lines.push("## What to tell stakeholders");
-  lines.push(
-    counts.open === 0
-      ? `${scope.release.name} is complete in Jira. Nothing in the data blocks the cut, so the message is a ship date, not a risk update.`
-      : `${scope.release.name} is not ready to announce as finished: ${open} risk ${open === 1 ? "finding" : "findings"} across ${counts.open} open items, concentrated in ${assessment.signals
-          .filter((s) => s.severity === "critical" || s.severity === "high")
-          .slice(0, 2)
-          .map((s) => s.title.toLowerCase())
-          .join(" and ") || "open scope"}. The conditions in this brief are what changes the verdict — not more status updates.`,
-  );
+  lines.push(stakeholderLine(assessment, scope));
 
   return lines.join("\n");
+}
+
+function stakeholderLine(assessment: Assessment, scope: ReleaseScope): string {
+  const { counts, score, bandLabel } = assessment;
+  const name = scope.release.name;
+  if (counts.open === 0) {
+    return `${name} is complete in Jira. Nothing in the data blocks the cut, so the message is a ship date, not a risk update.`;
+  }
+  if (assessment.band === "go") {
+    return `${name} is on track: ${counts.done} of ${counts.total} items are done and no blocker, overdue date or unowned critical ticket remains. Announce the date as planned and say what is still being watched.`;
+  }
+  if (assessment.band === "conditional") {
+    return `${name} can ship if the ${assessment.conditions.length} conditions in this brief are true by the cut. That is a commitment with a deadline, not a status update.`;
+  }
+  if (assessment.band === "no_go") {
+    return `${name} should not be announced as shipping. At ${score}/100 with ${counts.blocked} blocked items, the honest message is a new date and a smaller scope.`;
+  }
+  const focus = assessment.signals
+    .filter((s) => s.severity === "critical" || s.severity === "high")
+    .slice(0, 2)
+    .map((s) => s.title.toLowerCase())
+    .join(" and ");
+  return `${name} is ${bandLabel.toLowerCase()} at ${score}/100: ${counts.open} open items, ${counts.blocked} blocked, ${counts.unassigned} without an owner${focus ? `, driven by ${focus}` : ""}. What changes the verdict is the conditions in this brief — not more status updates.`;
 }
 
 export async function buildNarrative(

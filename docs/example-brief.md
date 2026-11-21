@@ -1,6 +1,6 @@
 # Payments 3.4.0 — ship confidence brief
 
-_Generated 2026-11-21T04:27:03.662Z by Confido 0.1.0 · source: sample:payments · evaluation time: 2026-11-20T18:00:00+09:00_
+_Generated 2026-11-21T04:30:21.453Z by Confido 0.1.0 · source: sample:payments · evaluation time: 2026-11-20T18:00:00+09:00_
 
 | | |
 | --- | --- |
@@ -24,7 +24,7 @@ _Generated 2026-11-21T04:27:03.662Z by Confido 0.1.0 · source: sample:payments 
 - Answer the concerns raised on PAY-1393, PAY-1414, PAY-1401 +3 more in-thread today.
 
 ## What to tell stakeholders
-Payments 3.4.0 is not ready to announce as finished: 18 risk findings across 11 open items, concentrated in unresolved blockers and past its due date. The conditions in this brief are what changes the verdict — not more status updates.
+Payments 3.4.0 is at risk at 51/100: 11 open items, 2 blocked, 2 without an owner, driven by unresolved blockers and past its due date. What changes the verdict is the conditions in this brief — not more status updates.
 
 ## Conditions to ship
 - [ ] Every blocker resolved or explicitly descoped (PAY-1401, PAY-1390).

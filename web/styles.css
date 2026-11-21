@@ -244,6 +244,16 @@ main {
 .driver-bar span { display: block; height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--mint-dim), var(--amber)); }
 .driver-pts { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted-2); }
 
+.gate {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line-soft);
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--muted-2);
+}
+.gate strong { color: var(--muted); font-weight: 650; }
+
 .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted-2); flex: 0 0 auto; }
 .dot-ok { background: var(--mint); box-shadow: 0 0 0 3px rgba(61, 220, 151, 0.12); }
 

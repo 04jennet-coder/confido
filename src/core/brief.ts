@@ -63,6 +63,15 @@ export function buildNextActions(signals: Signal[]): string[] {
   if (actions.length === 0) {
     actions.push("No action needed from the risk engine. Keep the release notes and the rollout plan ready.");
   }
+  const fillers = [
+    "Freeze scope for this release and confirm the cut with the release manager.",
+    "Prepare the rollout and rollback checklist, including who is on call at the cut.",
+    "Send support a one-paragraph summary of what changes for users.",
+  ];
+  for (const filler of fillers) {
+    if (actions.length >= 3) break;
+    actions.push(filler);
+  }
   return actions;
 }
 
