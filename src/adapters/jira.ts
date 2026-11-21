@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import type { ReleaseScope } from "../core/types.js";
 import { issuesToScope, buildJql, type JiraIssue } from "./jiraMap.js";
+import { searchJiraIssues } from "./jiraSearch.js";
 
 /**
  * Jira Cloud REST adapter (Node).
@@ -28,65 +29,9 @@ export function jiraConfigFromEnv(): JiraConfig | null {
   return { baseUrl, email, token };
 }
 
-const FIELDS = [
-  "summary",
-  "description",
-  "issuetype",
-  "status",
-  "priority",
-  "assignee",
-  "components",
-  "labels",
-  "created",
-  "updated",
-  "duedate",
-  "resolutiondate",
-  "fixVersions",
-  "issuelinks",
-  "comment",
-  "customfield_10016",
-  "customfield_10026",
-  "story_points",
-].join(",");
-
 interface SearchResponse {
   issues?: JiraIssue[];
-  nextPageToken?: string;
-  isLast?: boolean;
   total?: number;
-}
-
-async function searchJql(
-  config: JiraConfig,
-  jql: string,
-  limit: number,
-): Promise<JiraIssue[]> {
-  const auth = Buffer.from(`${config.email}:${config.token}`).toString("base64");
-  const issues: JiraIssue[] = [];
-  let token: string | undefined;
-  let guard = 0;
-
-  do {
-    guard += 1;
-    if (guard > 20) break;
-    const params = new URLSearchParams({ jql, fields: FIELDS, maxResults: "100" });
-    if (token) params.set("nextPageToken", token);
-
-    const res = await fetch(`${config.baseUrl}/rest/api/3/search/jql?${params.toString()}`, {
-      headers: { authorization: `Basic ${auth}`, accept: "application/json" },
-    });
-
-    if (!res.ok) {
-      const body = (await res.text()).slice(0, 300);
-      throw new Error(`Jira search failed (${res.status}). ${body}`);
-    }
-
-    const data = (await res.json()) as SearchResponse;
-    issues.push(...(data.issues ?? []));
-    token = data.isLast ? undefined : data.nextPageToken;
-  } while (token && issues.length < limit);
-
-  return issues.slice(0, limit);
 }
 
 export interface FetchOptions {
@@ -108,7 +53,14 @@ export async function fetchJiraScope(options: FetchOptions, config = jiraConfigF
     );
   }
   const jql = options.jql ?? buildJql(options.projectKey, options.fixVersion, options.sprint);
-  const issues = await searchJql(config, jql, options.limit ?? 400);
+  const auth = Buffer.from(`${config.email}:${config.token}`).toString("base64");
+  const issues = await searchJiraIssues(
+    jql,
+    (params) => fetch(`${config.baseUrl}/rest/api/3/search/jql?${params}`, {
+      headers: { authorization: `Basic ${auth}`, accept: "application/json" },
+    }),
+    options.limit,
+  );
 
   return issuesToScope(
     issues,

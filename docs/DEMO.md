@@ -75,6 +75,14 @@ node dist/mcp/server.js     # then, in Claude or Rovo:
 6. Terminal — MCP `tools/list`, then one `assess_release` call.
 7. Verdict card again for the close.
 
+## Codegeist live Jira segment
+
+Use a Jira test project and fix version with a resolved issue and an open blocker. Capture the
+Rovo Release Captain assessing that version and citing the blocker. Resolve the blocker in Jira,
+then rerun the same query and show the updated result. On the same site and issue state, invoke
+Confido through the Atlassian MCP connection and show the same score and issue keys. Use the
+live results in this segment; the fixed scores above refer to the bundled standalone fixture.
+
 ## Claims to avoid
 
 - Do not say "predicts" or "guarantees" — it scores evidence, it does not forecast.

@@ -7,7 +7,7 @@
 #   1. npm install            (in this folder — installs @forge/api)
 #   2. npm run build:core     (compiles ../src/core → src/lib)
 #   3. forge register         (creates the app id and writes it below)
-#   4. forge deploy && forge install --upgrade
+#   4. forge lint && forge deploy && forge install
 #
 # The app id is intentionally absent: `forge register` creates it for the account
 # that owns the app, and hard-coding someone else's id would break the install.
@@ -35,6 +35,7 @@ modules:
         - The score and the verdict come from the tool. Do not re-score, round or reinterpret them.
         - Always name the issue keys that produced a risk, so a human can open them.
         - If a call fails because the project key is missing, ask for the project key or a JQL query.
+        - If Jira could not return the complete scope, say that no verdict was computed and ask for a narrower fix version or JQL.
         - Be direct. A release at risk is described as at risk.
 
         Workflow:

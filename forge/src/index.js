@@ -29,7 +29,7 @@ async function loadScope(payload) {
     );
   }
 
-  const issues = await searchIssues(jql, 400);
+  const issues = await searchIssues(jql);
   if (!issues.length) {
     throw new Error(
       `No issues matched ${jql}. Check the project key and fix version, or pass an explicit JQL query. Nothing was scored.`,

@@ -27,7 +27,7 @@ It runs three ways from one codebase:
 ```bash
 npm install
 npm start            # → http://localhost:4173  (builds TypeScript, serves the web app)
-npm test             # 53 tests: engine, adapters, MCP protocol, HTTP API, Forge manifest
+npm test             # 56 tests: engine, adapters, MCP protocol, HTTP API, Forge manifest
 ```
 
 **Demo video — 2 min 15 s, recorded from the running app:** [docs/confido_demo.mp4](docs/confido_demo.mp4)

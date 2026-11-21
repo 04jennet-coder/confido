@@ -2,7 +2,7 @@
 
 Deadline: **2026-12-22 12:00 PST** (2026-12-23 05:00 KST). Category: **Apps for Software Teams**.
 Bonus tracks targeted: **Best Agents (Rovo)** and **Best app with Atlassian MCP**.
-Nothing has been submitted or deployed yet — the installation link is the only missing piece.
+Before submitting, register and deploy the app, verify the Rovo and MCP flows on a Jira test site, and add the installation link.
 
 ## Fields
 
@@ -125,7 +125,7 @@ own template. `narrative.provider` tells the reader which one wrote the brief.
    project key and fix version on the judge's site.
 3. Ask *"Why did it score that way?"* for the arithmetic, or *"What is blocking this release?"* for
    the risk register with issue keys.
-4. Screenshots and a 3-minute demo script: `docs/screenshot-*.png`, `docs/DEMO.md`.
+4. Standalone demo: `docs/confido_demo.mp4`. Capture the live Rovo and MCP steps before publishing the judging video.
 
 No Atlassian account beyond the judge's normal Jira login is needed; the app requests `read:jira-work`
 only and never writes.
@@ -134,7 +134,7 @@ only and never writes.
 
 It is a Forge app that integrates with Jira and Rovo: `rovo:agent` (assignable agent),
 `rovo:skill` (reusable playbook), `rovo:mcp` (MCP server exposing five tools), five `action` modules
-and five `function` modules calling Jira Cloud REST v3 through `requestJira` as the installing user.
+and five `function` modules calling Jira Cloud REST v3 as the person invoking the tool.
 Bonus-track evidence, in manifest order: the `rovo:agent` module with `skills` and `actions`
 (Best Agents), and the `rovo:mcp` module listing those action keys (Best app with Atlassian MCP).
 
@@ -142,10 +142,10 @@ Bonus-track evidence, in manifest order: the `rovo:agent` module with `skills` a
 
 ## Submission checklist
 
-- [ ] `npm test` green (53 tests) — run at 2026-11-21, all pass.
+- [x] `npm test` passes all 56 tests, including Jira pagination regression coverage.
 - [ ] `npm run build:forge` output committed or rebuilt before deploy.
 - [ ] `forge register` → app id in `forge/manifest.yml`.
-- [ ] `forge deploy` + `forge install --upgrade` on a Jira site.
+- [ ] `forge lint`, `forge deploy`, then `forge install` on a Jira test site.
 - [ ] Installation/sharing link for judges pasted above.
 - [ ] Demo video (< 5 min, public on YouTube) recorded from `docs/DEMO.md`.
 - [ ] Repo made public (or judges given access) with MIT licence.

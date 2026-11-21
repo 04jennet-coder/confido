@@ -15,8 +15,8 @@
     "dev": "npm run build && node dist/server.js --port 4173",
     "cli": "npm run build --silent && node dist/cli.js",
     "mcp": "npm run build --silent && node dist/mcp/server.js",
-    "test": "npm run build --silent && npm run build:forge --silent && node --test tests/",
-    "test:only": "node --test tests/"
+    "test": "npm run build --silent && npm run build:forge --silent && node --test",
+    "test:only": "node --test"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",

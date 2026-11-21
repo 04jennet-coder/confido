@@ -4,6 +4,9 @@ import { readFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse as parseYaml } from "yaml";
+import { assess } from "../forge/src/lib/core/assess.js";
+import { issuesToScope } from "../forge/src/lib/adapters/jiraMap.js";
+import { searchJiraIssues } from "../forge/src/lib/adapters/jiraSearch.js";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const forge = join(root, "forge");
@@ -87,4 +90,52 @@ test("the Forge app does not depend on Node-only APIs the runtime lacks", () => 
   const text = readFileSync(join(forge, "src", "lib", "core", "assess.js"), "utf8");
   assert.equal(/from "node:fs"/.test(text), false);
   assert.equal(/child_process/.test(text), false);
+});
+
+test("Jira search includes a blocker beyond the first 400 issues in the verdict", async () => {
+  const jql = 'project = "PAY" AND fixVersion = "3.4.0"';
+  const done = Array.from({ length: 400 }, (_, index) => ({
+    key: `PAY-${index + 1}`,
+    fields: { status: { statusCategory: { key: "done" } } },
+  }));
+  const blocker = {
+    key: "PAY-401",
+    fields: { labels: ["blocker"], status: { statusCategory: { key: "new" } } },
+  };
+  let page = 0;
+  const issues = await searchJiraIssues(jql, async (params) => {
+    assert.equal(params.get("jql"), jql);
+    assert.equal(params.get("nextPageToken"), page === 0 ? null : `page+${page}=`);
+    if (page === 4) return Response.json({ issues: [blocker], isLast: true });
+    const offset = page * 100;
+    page += 1;
+    return Response.json({ issues: done.slice(offset, offset + 100), isLast: false, nextPageToken: `page+${page}=` });
+  });
+  assert.equal(issues.length, 401);
+  const result = assess(issuesToScope(issues, {
+    name: "Payments 3.4.0",
+    projectKey: "PAY",
+    asOf: "2026-11-20T00:00:00Z",
+  }), "jira");
+  assert.equal(result.counts.blocked, 1);
+  assert.notEqual(result.bandLabel, "SHIP");
+});
+
+test("Jira search refuses a partial scope at the issue or page limit", async () => {
+  const issue = { key: "PAY-1", fields: {} };
+  const request = async () => Response.json({ issues: [issue], isLast: false, nextPageToken: "continue" });
+  await assert.rejects(searchJiraIssues("project = PAY", request, 1), /no verdict was computed/i);
+  let pages = 0;
+  await assert.rejects(searchJiraIssues("project = PAY", async () => {
+    pages += 1;
+    return Response.json({ issues: [], isLast: false, nextPageToken: String(pages) });
+  }), /no verdict was computed/i);
+  assert.equal(pages, 20);
+});
+
+test("Jira search refuses missing or repeated continuation tokens", async () => {
+  for (const nextPageToken of [undefined, "repeated"]) {
+    await assert.rejects(searchJiraIssues("project = PAY", async () =>
+      Response.json({ issues: [], isLast: false, nextPageToken })), /no verdict was computed/i);
+  }
 });

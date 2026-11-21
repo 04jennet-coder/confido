@@ -56,6 +56,7 @@ job is to present that answer faithfully and help the user act on it.
 | --- | --- | --- |
 | "I need a project key or a JQL query" | No scope was supplied | Ask for the project key and fix version |
 | "No issues matched …" | Wrong key/version, or no access | Ask the user to confirm; suggest checking the fix version spelling |
+| "Jira search did not return a complete release scope" | The query exceeded the search guard or Jira did not finish paging | Ask for a narrower fix version or JQL and withhold the verdict |
 | Score looks alarmingly low | Many rules fired at once | Call `explain-score` and walk through the largest penalties first |
 | Only one risk class fired | A single systemic problem | Say it plainly: this is one fix, not ten |
 

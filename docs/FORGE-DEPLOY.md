@@ -14,7 +14,7 @@ been deployed or registered — that step is deliberately left to the account ow
 From the repository root:
 
 ```bash
-npm install
+npm ci
 npm run build          # compiles src/ → dist/ (web app, CLI, MCP)
 npm run build:forge    # compiles src/core + src/adapters/jiraMap.ts → forge/src/lib/
 ```
@@ -26,7 +26,7 @@ cover. `npm test` also runs `build:forge`, so a green test run guarantees it.
 
 ```bash
 cd forge
-npm install            # @forge/api
+npm ci                 # @forge/api
 ```
 
 ## 3. Register the app (creates the app id)
@@ -42,11 +42,12 @@ secret, and `forge deploy` reads it from the manifest.
 ## 4. Deploy and install
 
 ```bash
+forge lint
 forge deploy                     # bundles forge/ and deploys to the development environment
-forge install --upgrade          # choose your Jira site when prompted
+forge install                    # first install; select the test site and Jira
 ```
 
-If the install step asks which product, choose **Jira**.
+For an existing installation use `forge install --upgrade` if Atlassian requires an upgrade for the deployed version.
 
 ## 5. Verify in Jira
 
@@ -59,24 +60,22 @@ If the install step asks which product, choose **Jira**.
    want to expose. The endpoint is `https://mcp.atlassian.com/forge/<appId>` (uuid only). Add it to
    Claude Code with:
    `claude mcp add --transport http confido https://mcp.atlassian.com/forge/<appId>`
+6. Run the same release query as two users with different Jira project permissions. Verify that
+   Rovo and MCP only return issues the invoking user can browse. Check that an incomplete search
+   asks for a narrower scope without displaying a score or verdict.
 
 ## 6. Share with judges (installation link)
 
 Codegeist requires an **installation link** the judges can use:
 
 ```bash
-forge install list          # find the installation
-# or, from the app page:
 forge deploy -e production
 ```
 
-Then, in the developer console (<https://developer.atlassian.com/console/myapps/>) → your app →
-**Distribution** → *Start sharing* → choose **Share to all users on your site** or **Share to all
-users** and copy the generated installation link. Put that link, plus the two steps above, into the
-submission's access instructions.
-
-If you prefer not to widen distribution, the fallback is **Sharing → Direct link** for specific
-sites; the judges need the link that works without your account.
+Then open the developer console (<https://developer.atlassian.com/console/myapps/>) → your app →
+**Distribution** → **Edit**. Select Jira, enable **Sharing**, and copy the installation link.
+Verify it from a second Jira site using an account with permission to install apps there. Include the
+link, the Rovo and MCP verification steps, and the release fixture details in the submission.
 
 ## What the app asks for
 
@@ -95,6 +94,7 @@ see a validation error about the id, you have not registered yet (step 3).
 | Agent does not appear in Rovo | app installed but agent unpublished | `forge install --upgrade`, then reload Jira |
 | "I need a project key…" | no scope supplied | give a project key or JQL in the prompt |
 | "No issues matched …" | wrong key/version or no permission | check the fix version spelling; the app runs as you |
+| "Jira search did not return a complete release scope" | search limit or invalid pagination | narrow the release scope and run the query again |
 | MCP endpoint 404 | external exposure disabled | Administration → Apps → Connected apps → enable tools |
 | Manifest lint error on `rovo:skill` | directory/frontmatter name mismatch | the directory name must equal the skill key (`release-readiness`) |
 
