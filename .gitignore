@@ -5,3 +5,6 @@ reports/*.md
 .env
 .DS_Store
 *.log
+
+# demo render scratch (frames, audio, segments)
+demo-build/

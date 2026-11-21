@@ -30,7 +30,8 @@ npm start            # → http://localhost:4173  (builds TypeScript, serves the
 npm test             # 56 tests: engine, adapters, MCP protocol, HTTP API, Forge manifest
 ```
 
-**Demo video — 2 min 15 s, recorded from the running app:** [docs/confido_demo.mp4](docs/confido_demo.mp4)
+**Demo video — 2 min 8 s, recorded from the running app:** [docs/confido_demo.mp4](docs/confido_demo.mp4)
+(thumbnail: [docs/confido_demo_v2_thumb.png](docs/confido_demo_v2_thumb.png))
 (verdict → risk register → why the score → the comment the status field missed → drift → release
 notes → the same engine as an MCP server).
 
